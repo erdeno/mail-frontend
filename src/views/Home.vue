@@ -1,18 +1,44 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="container">
+    <br />
+    <div class="column mb0" v-for="email in emails" :key="email.id">
+      <mail-card />
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
+import axios from 'axios'
+import MailCard from '@/components/MailCard'
 export default {
-  name: "Home",
-  components: {
-    HelloWorld,
+  name: 'Home',
+  data() {
+    return {
+      emails: [],
+    }
   },
-};
+  components: {
+    MailCard,
+  },
+  mounted() {
+    this.getEmails()
+    document.title = 'Mail'
+  },
+  methods: {
+    async getEmails() {
+      this.$store.commit('setIsLoading', true)
+
+      await axios
+        .get('/api/v1/emails/inbox')
+        .then((response) => {
+          this.emails = response.data
+        })
+        .catch((error) => {
+          console.log(`error`, error)
+        })
+      this.$store.commit('setIsLoading', false)
+      console.log(`emails`, this.emails)
+    },
+  },
+}
 </script>

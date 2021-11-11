@@ -1,30 +1,84 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <navbar />
+  <section>
+    <router-view />
+  </section>
+  <div
+    class="is-loading-bar has-text-centered"
+    :class="{ 'is-loading': $store.state.isLoading }"
+  >
+    <div class="lds-dual-ring"></div>
   </div>
-  <router-view />
+  <!-- <footer class="footer">
+    <p class="has-text-centered">Copyright (c) 2021</p>
+  </footer> -->
 </template>
 
+<script>
+import axios from 'axios'
+import Navbar from '@/components/Navbar'
+
+export default {
+  name: 'App',
+  components: {
+    Navbar,
+  },
+  beforeCreate() {
+    // we are using commit for call the mutations in the vuex store
+    this.$store.commit('initializeStore')
+
+    const token = this.$store.state.token
+
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = 'Token ' + token
+    } else {
+      axios.defaults.headers.common['Authorization'] = ''
+    }
+  },
+}
+</script>
+
 <style lang="scss">
+@import '../node_modules/bulma';
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: ' ';
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #ccc;
+  border-color: #ccc transparent #ccc transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.is-loading-bar {
+  height: 0;
+  overflow: hidden;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  &.is-loading {
+    height: 80px;
   }
 }
 </style>
