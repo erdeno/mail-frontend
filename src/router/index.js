@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import store from '../store'
 
 import Home from '../views/Home.vue'
+import Archive from '../views/Archive.vue'
 import SignUp from '../views/SignUp.vue'
 import LogIn from '../views/LogIn.vue'
 
@@ -10,6 +11,14 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+    meta: {
+      requireLogin: true,
+    },
+  },
+  {
+    path: '/archived',
+    name: 'Archive',
+    component: Archive,
     meta: {
       requireLogin: true,
     },

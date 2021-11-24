@@ -1,8 +1,9 @@
 <template>
   <div class="card">
-    <header class="card-header" @click="showContent" style="user-select: none">
+    <header class="card-header" @click="showContent">
       <p class="card-header-title">
-        {{ mail.subject }}
+        {{ email.subject }}
+        <span class="tag is-primary is-light" v-if="!email.read">New</span>
       </p>
       <button class="card-header-icon" aria-label="more options">
         <span class="icon">
@@ -13,17 +14,21 @@
     <div class="card-body" v-if="displaying">
       <div class="card-content">
         <div class="content">
-          from {{ mail.sender }}
-          {{ mail.body }}
+          from {{ email.sender }}
+          {{ email.body }}
           <br />
           On
-          <time>{{ mail.date }}</time>
+          <time>{{ email.timestamp }}</time>
         </div>
       </div>
       <footer class="card-footer">
-        <a href="#" class="card-footer-item">Save</a>
-        <a href="#" class="card-footer-item">Edit</a>
-        <a href="#" class="card-footer-item">Delete</a>
+        <button class="card-footer-item button is-ghost" @click="read(email)">
+          {{ email.read ? 'Unread' : 'Mark as Read' }}
+        </button>
+        <button class="card-footer-item button is-ghost">Forward</button>
+        <button class="card-footer-item button is-ghost" @click="archive(email)">
+          {{ email.archived ? 'Unarchive' : 'Archive' }}
+        </button>
       </footer>
     </div>
   </div>
@@ -31,19 +36,16 @@
 <script>
 export default {
   name: 'MailCard',
+  emits: ['markAsRead', 'archived'],
   data() {
     return {
-      mail: {
-        subject: 'Job application',
-        sender: 'ceza@mail.com',
-        date: '20 Oct 2021',
-        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.',
-      },
       displaying: false,
       icon: 'fas fa-angle-down',
     }
   },
-  components: {},
+  props: {
+    email: Object,
+  },
   methods: {
     showContent() {
       if (!this.displaying) {
@@ -54,14 +56,21 @@ export default {
         this.icon = 'fas fa-angle-down'
       }
     },
+    read(email) {
+      this.$emit('markAsRead', email)
+    },
+    archive(email) {
+      this.$emit('archived', email)
+    },
   },
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .card {
-  margin-bottom: 0px;
+  margin-bottom: 0;
   padding: 0px;
+  border-radius: 0;
 }
 .card-header {
   display: flex;

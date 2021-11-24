@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io">
+      <router-link class="navbar-item" to="/">
         <img :src="icon" width="112" height="28" />
-      </a>
+      </router-link>
 
       <a
         class="navbar-burger"
@@ -21,9 +21,9 @@
     <div class="navbar-menu" id="navbar-menu" :class="{ 'is-active': showMobileMenu }">
       <div class="navbar-start">
         <template v-if="$store.state.isAuthenticated">
-          <a class="navbar-item"> Inbox </a>
-          <a class="navbar-item"> Archived </a>
-          <a class="navbar-item"> Sent </a>
+          <router-link class="navbar-item" to="/">Inbox</router-link>
+          <router-link class="navbar-item" to="/archived">Archived</router-link>
+          <router-link class="navbar-item" to="/">Sent</router-link>
         </template>
       </div>
 
@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       showMobileMenu: false,
-      icon: require('@/assets/logo.svg'),
+      icon: require('@/assets/logo.png'),
     }
   },
   methods: {

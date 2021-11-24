@@ -1,5 +1,5 @@
 <template>
-  <mail-list mailbox="inbox" />
+  <mail-list mailbox="archive" />
 </template>
 
 <script>
